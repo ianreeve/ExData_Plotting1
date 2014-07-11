@@ -1,0 +1,18 @@
+tbl <- read.table("household_power_consumption.txt",sep=";",header=TRUE,string=F)
+x <-paste(tbl$Date,tbl$Time)
+DateTime <- strptime(x,"%d/%m/%Y %H:%M:%S")
+tbl <-cbind(tbl,DateTime)
+is.na(tbl) <- tbl=="?"
+start <- as.POSIXct("2007-02-01 00:00:00")
+fin <- as.POSIXct("2007-02-02 23:59:59")
+newtbl <-subset(tbl,tbl$DateTime>=start & tbl$DateTime<=fin)
+newtbl$Global_active_power <- as.numeric(newtbl$Global_active_power)
+newtbl$Sub_metering_1 <- as.numeric(newtbl$Sub_metering_1)
+newtbl$Sub_metering_2 <- as.numeric(newtbl$Sub_metering_2)
+newtbl$Sub_metering_3 <- as.numeric(newtbl$Sub_metering_3)
+newtbl$Global_reactive_power <- as.numeric(newtbl$Global_reactive_power)
+newtbl$Voltage <- as.numeric(newtbl$Voltage)
+
+png("plot1.png",480,480,"px")
+hist(newtbl$Global_active_power,main="Global Active Power",col="red",xlab="Global Active Power (kilowatts)")
+dev.off()
